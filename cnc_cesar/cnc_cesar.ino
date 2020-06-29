@@ -3,7 +3,7 @@
 //       variable de lectura de datos     //
 ////////////////////////////////////////////
 const byte SPACE_DATA = 50;
-bool end_read_data = false;
+bool end_read_new_data = false;
 
 char serial_data_from_pc[SPACE_DATA];
 
@@ -36,7 +36,7 @@ void _read_from_pc() {
 
   // lee todo los datos que estan el bufet
   if(Serial.available() > 0){
-
     
+    end_read_new_data
   }
 }
