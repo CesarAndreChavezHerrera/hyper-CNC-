@@ -11,7 +11,6 @@ char serial_data_from_pc[SPACE_DATA]; // donnde se guarda los datos
 ////////////////////////////////////////////
 //      varaibale de interpretacion       //
 ////////////////////////////////////////////
-
 const byte MOTOR_N = 7;  // CANTIDAD DE MOTOR
 long step_[MOTOR_N];     // los pasos 
 bool dir_[MOTOR_N];      // la direcion
@@ -161,12 +160,15 @@ void _interpretar(){
        case 'F':
 
           __set_speed(i,last_motor);
-
-/*
+          /*
+          Serial.println("motor " + String(last_motor));
+          Serial.println("pasos");
           Serial.println(step_[last_motor]);
+          Serial.println("velocidad");
           Serial.println(speed_[last_motor]);
+          Serial.println("direcion");
           Serial.println(dir_[last_motor]);
-*/        
+    */
           break;
        
        
@@ -217,6 +219,15 @@ void __set_speed(int index, int motor){
   speed_[motor] = ___translate_data(index);
   speed_[motor] = abs(speed_[motor]);
 }
+
+/////////////////////////////////////////////////////////
+//                                                     //
+//                                                     //
+//      FUNCION PRINCIPAL PARA LA LECTURA DE DATOS     //
+//                                                     //
+//                                                     //
+/////////////////////////////////////////////////////////
+
 
 
 // traduce los datos y debuelve un long 
