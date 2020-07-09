@@ -34,14 +34,26 @@ long speed_[MOTOR_N];    // la velocidad
 
 // DIRECION
 #define DIR_X 2
+#define DIR_Y 4 
+#define DIR_Z 6
+#define DIR_A 8
+#define DIR_B 10
+#define DIR_C A0
 
 // STEP
 #define STEP_X 3
-
+#define STEP_Y 5
+#define STEP_Z 7
+#define STEP_A 9
+#define STEP_B 13
+#define STEP_C A1
 // Definiciones de la salida 
 
-byte motor_dir[MOTOR_N] = { DIR_X};
-byte motor_step[MOTOR_N] = {STEP_X};
+byte motor_dir[MOTOR_N] = { DIR_X,DIR_Y,DIR_Z,//DIRECION DE LOS MOTORES
+                            DIR_A,DIR_B,DIR_C};
+                            
+byte motor_step[MOTOR_N] = {STEP_X , STEP_Y,STEP_Z,
+                            STEP_A,STEP_B,STEP_C};
 
 
 
@@ -57,6 +69,21 @@ void setup() {
   
   pinMode(DIR_X,OUTPUT);
   pinMode(STEP_X,OUTPUT);
+
+  pinMode(DIR_Y,OUTPUT);
+  pinMode(STEP_Y,OUTPUT);
+
+  pinMode(DIR_Z,OUTPUT);
+  pinMode(STEP_Z,OUTPUT);
+
+  pinMode(DIR_A,OUTPUT);
+  pinMode(STEP_A,OUTPUT);
+
+  pinMode(DIR_B,OUTPUT);
+  pinMode(STEP_B,OUTPUT);
+
+  pinMode(DIR_C,OUTPUT);
+  pinMode(STEP_C,OUTPUT);
   ////////////////////////////////////////////////
   //             lectura de datos               //
   ////////////////////////////////////////////////
@@ -284,6 +311,12 @@ long ___translate_data(int index){
 void _main_motor(){
 
   __move_motor(AXIS_X);
+  __move_motor(AXIS_Y);
+  __move_motor(AXIS_Z);
+  
+  __move_motor(AXIS_A);
+  __move_motor(AXIS_B);
+  __move_motor(AXIS_C);
 }
 
 void __move_motor(int motor ){
@@ -302,7 +335,7 @@ void __move_motor(int motor ){
     //delay(speed_[motor]);
    step_[motor] = step_[motor] - 1;
    if (step_[motor]  == 0 ){
-    Serial.println("MOTOR END");
+    Serial.println("MOTOR END "+ String(motor));
    }
   }
 }
