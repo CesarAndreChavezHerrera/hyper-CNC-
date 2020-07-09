@@ -65,6 +65,17 @@ byte motor_step[MOTOR_N] = {STEP_X , STEP_Y,STEP_Z,
 
 unsigned long timer;
 unsigned long time_read;
+
+
+
+
+////////////////////////////////////////////
+//      VARIABLE DE laser sistema         //
+////////////////////////////////////////////
+
+byte pwm = 0;
+#define PWM 11
+
 void setup() {
   // put your setup code here, to run once:
   
@@ -85,6 +96,8 @@ void setup() {
 
   pinMode(DIR_C,OUTPUT);
   pinMode(STEP_C,OUTPUT);
+
+  pinMode(PWM,OUTPUT);
   ////////////////////////////////////////////////
   //             lectura de datos               //
   ////////////////////////////////////////////////
@@ -106,7 +119,7 @@ void loop() {
   }
   
   _main_motor();
- 
+  _main_heramientas();
 }
 
 
@@ -246,7 +259,7 @@ void _interpretar(){
           break;
 
        case 'P': // pwm 
-
+            __pwm(i);
           break;
 
        
@@ -300,6 +313,18 @@ long ___translate_data(int index){
 }
 
 
+// sistema de pwm sacar los datos
+void __pwm(int index){
+  long review_byte = abs(___translate_data(index));
+
+   if (review_byte < 255){
+    
+    pwm = review_byte; 
+   }else{
+    pwm = 255; 
+   }
+}
+
 
 /////////////////////////////////////////////////////////
 //                                                     //
@@ -339,4 +364,23 @@ void __move_motor(int motor ){
     Serial.println("MOTOR END "+ String(motor));
    }
   }
+}
+
+
+/////////////////////////////////////////////////////////
+//                                                     //
+//                                                     //
+//      FUNCION PRINCIPAL PARA SISTEMA DE heramientas  //
+//                                                     //
+//                                                     //
+/////////////////////////////////////////////////////////
+
+void _main_heramientas(){
+  __laser();
+}
+
+
+void __laser(){
+  analogWrite(PWM,pwm);
+  
 }
