@@ -27,10 +27,36 @@ long speed_[MOTOR_N];    // la velocidad
 #define AXIS_NOT_FIND 6
 
 #define AXIS_COMMAND 9
+
+////////////////////////////////////////////
+//      varaibale de MOVER motor          //
+////////////////////////////////////////////
+
+// DIRECION
+#define DIR_X 2
+
+// STEP
+#define STEP_X 3
+
+// Definiciones de la salida 
+
+byte motor_dir[MOTOR_N] = { DIR_X};
+byte motor_step[MOTOR_N] = {STEP_X};
+
+
+
+////////////////////////////////////////////
+//      VARIABLE DE EVENTOSS              //
+////////////////////////////////////////////
+#define READ_EVENT 500
+
+unsigned long timer;
+unsigned long time_read;
 void setup() {
   // put your setup code here, to run once:
   
-  
+  pinMode(DIR_X,OUTPUT);
+  pinMode(STEP_X,OUTPUT);
   ////////////////////////////////////////////////
   //             lectura de datos               //
   ////////////////////////////////////////////////
@@ -42,8 +68,17 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  _main_read();
-  delay(100);
+
+  timer = millis();
+
+  if((timer - time_read) >= READ_EVENT){
+    _main_read();
+    
+    time_read = timer;
+  }
+  
+  _main_motor();
+ 
 }
 
 
@@ -220,15 +255,6 @@ void __set_speed(int index, int motor){
   speed_[motor] = abs(speed_[motor]);
 }
 
-/////////////////////////////////////////////////////////
-//                                                     //
-//                                                     //
-//      FUNCION PRINCIPAL PARA LA LECTURA DE DATOS     //
-//                                                     //
-//                                                     //
-/////////////////////////////////////////////////////////
-
-
 
 // traduce los datos y debuelve un long 
 long ___translate_data(int index){
@@ -243,4 +269,40 @@ long ___translate_data(int index){
 
     result = atol(data);// tranforma esos caracteres a numero 
     return result;
+}
+
+
+
+/////////////////////////////////////////////////////////
+//                                                     //
+//                                                     //
+//      FUNCION PRINCIPAL PARA SISTEMA DE MOTORES      //
+//                                                     //
+//                                                     //
+/////////////////////////////////////////////////////////
+
+void _main_motor(){
+
+  __move_motor(AXIS_X);
+}
+
+void __move_motor(int motor ){
+  if (step_[motor] > 0){
+    
+    
+    //direcion
+    digitalWrite(motor_dir[motor],dir_[motor]);
+    //pasos
+    digitalWrite(motor_step[motor],HIGH);
+    delayMicroseconds(speed_[motor]);
+
+    //delay(speed_[motor]);
+    digitalWrite(motor_step[motor],LOW);
+    delayMicroseconds(speed_[motor]);
+    //delay(speed_[motor]);
+   step_[motor] = step_[motor] - 1;
+   if (step_[motor]  == 0 ){
+    Serial.println("MOTOR END");
+   }
+  }
 }
